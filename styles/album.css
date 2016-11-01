@@ -52,7 +52,7 @@
  }
 
  .song-item-title {
-     width: 85%;
+     width: 90%;
  }
 
  .song-item-duration{
@@ -75,6 +75,7 @@
          top: 1rem;
          width: 80%;
          margin: auto;
+        
      }
  }
      
