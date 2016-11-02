@@ -29,6 +29,22 @@ var albumMarconi = {
      ]
  };
 
+var albumKong = {
+     title: 'Jungle Jams',
+     artist: 'David Wise',
+     label: 'Nin',
+     year: '1992',
+     albumArtUrl: 'assets/images/album_covers/DonkeyKong1.jpg',
+     songs: [
+         { title: 'Jungle Hijinx', duration: '5:21' },
+         { title: 'Twilight Terror', duration: '4:06' },
+         { title: 'Aquatic Ambience', duration: '3:11'},
+         { title: 'Stickerbrush Symphony', duration: '2:54' },
+         { title: 'Misty Mines', duration: '2:14'}
+     ]
+ };
+
+
 var createSongRow = function(songNumber, songName,songLength){
 
     var template =
@@ -43,28 +59,49 @@ var createSongRow = function(songNumber, songName,songLength){
 }
 
  var setCurrentAlbum = function(album) {
-     // #1
+
      var albumTitle = document.getElementsByClassName('album-view-title')[0];
      var albumArtist = document.getElementsByClassName('album-view-artist')[0];
      var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
      var albumImage = document.getElementsByClassName('album-cover-art')[0];
      var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
- 
-     // #2
+
      albumTitle.firstChild.nodeValue = album.title;
      albumArtist.firstChild.nodeValue = album.artist;
      albumReleaseInfo.firstChild.nodeValue = album.year + ' ' + album.label;
      albumImage.setAttribute('src', album.albumArtUrl);
  
-     // #3
      albumSongList.innerHTML = '';
  
-     // #4
      for (var i = 0; i < album.songs.length; i++) {
          albumSongList.innerHTML += createSongRow(i + 1, album.songs[i].title, album.songs[i].duration);
      }
  };
  
- window.onload = function() {
+window.onload = function() {
      setCurrentAlbum(albumPicasso);
  };
+
+//Get the album cover for current page
+var albumCover=document.getElementsByClassName("half")[0];
+
+//add an event listener to the album cover div object we just got
+albumCover.addEventListener("click",function(event){
+    
+    //check what the current album is, and then change it to the next album
+    if(document.getElementsByClassName("album-view-artist")[0].firstChild.nodeValue=="Pablo Picasso"){
+        setCurrentAlbum(albumMarconi);
+        return;
+    }
+    
+    if(document.getElementsByClassName("album-view-artist")[0].firstChild.nodeValue=="Guglielmo Marconi"){
+        setCurrentAlbum(albumKong);
+        return;
+    }
+    
+    if(document.getElementsByClassName("album-view-artist")[0].firstChild.nodeValue=="David Wise"){
+        setCurrentAlbum(albumPicasso);
+        return;
+    }
+    
+});
