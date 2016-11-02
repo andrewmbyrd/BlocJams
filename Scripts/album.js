@@ -71,21 +71,31 @@ var createSongRow = function(songNumber, songName,songLength){
 
 //use this function to pass in an element and its parent element you're looking for. //It will return the ancestor if it exists
 var findParentByClassName=function(element,parentClass){
-    if(element!=null){
+    if(element.parentElement===null){
+        alert("No parent found.");
+        return;
+    }
+    if(element!==null){
         
     
-    while(element.parentElement.className!=null){
-        if(element.parentElement.className==parentClass){
+    while(element.parentElement!==null){
+        if(element.parentElement.className===parentClass){
             return element.parentElement;
         }
         element=element.parentElement;
     }
-    }
     
+        alert("No parent found with that class name.");
+        return;
+    }
+   
 };
 
 
-
+var albumCover=document.getElementsByClassName("column half")[0];
+albumCover.addEventListener("click",function(event){
+   findParentByClassName(document.documentElement,"albu");
+});
 
 
 //returns the song item number associated with the current element
@@ -121,7 +131,9 @@ var clickHandler =function(targetElement){
         currentlyPlayingSong= songItemNumber.getAttribute("data-song-number");
     
     
-    //then if its not null, and we click on this same song again, then we effectively paused the thing so we need to change the symbol back to a play button. nothing is playing now, so we set currentlyplayingSong back to null
+    /* then if its not null, and we click on this same song again, then we effectively
+       paused the thing so we need to change the symbol back to a play button. nothing
+       is playing now, so we set currentlyplayingSong back to null */
     }else if(currentlyPlayingSong==songItemNumber.getAttribute("data-song-number")){
         songItemNumber.innerHTML=playButtonTemplate;
         currentlyPlayingSong=null;
@@ -153,7 +165,7 @@ var currentlyPlayingSong=null;
 
  window.onload = function() {
      setCurrentAlbum(albumPicasso);
-     
+   
     songListContainer.addEventListener("mouseover",function(event){
     
         var songItem=getSongItem(event.target);
