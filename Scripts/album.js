@@ -42,7 +42,7 @@ var createSongRow = function(songNumber, songName,songLength){
       ;
  
      return template;
-}
+};
 
 
 // this sets the page to the album you pass in 
@@ -71,10 +71,10 @@ var createSongRow = function(songNumber, songName,songLength){
 
 //use this function to pass in an element and its parent element you're looking for. //It will return the ancestor if it exists
 var findParentByClassName=function(element,parentClass){
-    if(element!=null){
+    if(element!==null){
         
     
-    while(element.parentElement.className!=null){
+    while(element.parentElement.className!==null){
         if(element.parentElement.className==parentClass){
             return element.parentElement;
         }
@@ -116,7 +116,7 @@ var clickHandler =function(targetElement){
     var songItemNumber = getSongItem(targetElement);
     
     //if that is null, then nothing has been clicked yet. so this song has started playing, and so we need to changed its symbol to a pause button. then update what the currently playing song is
-    if(currentlyPlayingSong==null){
+    if(currentlyPlayingSong===null){
         songItemNumber.innerHTML=pauseButtonTemplate;
         currentlyPlayingSong= songItemNumber.getAttribute("data-song-number");
     
