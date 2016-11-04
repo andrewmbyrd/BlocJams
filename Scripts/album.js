@@ -110,10 +110,13 @@ var trackIndex= function(album,song){
     return album.songs.indexOf(song);
 };
 
-var nextSong=function(){
+var changeSong=function(){
+ 
   //change the symbol in the song that is being LEFT to a number again
-  getSongNumberCell(currentlyPlayingSongNumber).html(currentlyPlayingSongNumber); 
-
+  getSongNumberCell(currentlyPlayingSongNumber).html(currentlyPlayingSongNumber);
+    
+//check if the button that was clicked was the Forward button. if it was, increment the //currentlyPlayingSong number, or loop to the beginning if it was at the end    
+if(event.target.className==="ion-skip-forward"){ 
   //set the song number to the next song. if we're at the end of the list, loop around   
   if (trackIndex(currentAlbum,currentSongFromAlbum)===currentAlbum.songs.length-1 ){
       
@@ -122,20 +125,10 @@ var nextSong=function(){
       
       currentlyPlayingSongNumber++;
   }
-  //update what the current song is, and then update the player bar with that info
-  setSong(currentlyPlayingSongNumber);
-  
-    
-  updatePlayerBarSong(currentSongFromAlbum);
-  
-  //update the symbol in the currently playing song with a pause button 
-  getSongNumberCell(currentlyPlayingSongNumber).html(pauseButtonTemplate);
-        
-};
 
-var previousSong=function(){
-  //change the symbol in the song that is being LEFT to a number again    
-  getSongNumberCell(currentlyPlayingSongNumber).html(currentlyPlayingSongNumber);  
+//if it wasn't the Forward button, it was the back button. change  current song //accordingly
+}else{
+  
 
   //set the song number to the next song. if we're at the beginning of the list, loop around   
   if (trackIndex(currentAlbum,currentSongFromAlbum)===0 ){
@@ -143,13 +136,15 @@ var previousSong=function(){
   }else{
       currentlyPlayingSongNumber--;
   }
+    
+}
   //update what the current song is, and then update the player bar with that info
   setSong(currentlyPlayingSongNumber);
   updatePlayerBarSong(currentSongFromAlbum);
   
   //update the symbol in the currently playing song with a pause button    
   getSongNumberCell(currentlyPlayingSongNumber).html(pauseButtonTemplate);
-        
+
 };
 
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
@@ -168,7 +163,7 @@ var $nextButton = $('.main-controls .next');
 
  $(document).ready(function() {
      setCurrentAlbum(albumPicasso);
-     $previousButton.click(previousSong);
-     $nextButton.click(nextSong);
+     $previousButton.click(changeSong);
+     $nextButton.click(changeSong);
 
  });
