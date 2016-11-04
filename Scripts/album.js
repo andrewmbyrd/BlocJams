@@ -18,8 +18,7 @@ var createSongRow = function(songNumber, songName,songLength){
         
         if(currentlyPlayingSongNumber===null){
             $(this).html(pauseButtonTemplate);
-            currentlyPlayingSongNumber=songItemNumber;
-            currentSongFromAlbum=currentAlbum.songs[currentlyPlayingSongNumber-1];
+            setSong(songItemNumber);
             updatePlayerBarSong(currentSongFromAlbum);
         
         }else if(currentlyPlayingSongNumber===songItemNumber){
@@ -30,13 +29,12 @@ var createSongRow = function(songNumber, songName,songLength){
         
         }else if(currentlyPlayingSongNumber!= songItemNumber){
             
-            var $currentlyPlayingSongElement= $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');
+            var $currentlyPlayingSongElement= getSongNumberCell(currentlyPlayingSongNumber);
             
             $currentlyPlayingSongElement.html($currentlyPlayingSongElement.attr("data-song-number"));
             
             $(this).html(pauseButtonTemplate);
-            currentlyPlayingSongNumber=songItemNumber;
-            currentSongFromAlbum=currentAlbum.songs[currentlyPlayingSongNumber-1];
+            setSong(songItemNumber);
             updatePlayerBarSong(currentSongFromAlbum);
         }
     };
@@ -63,6 +61,17 @@ var createSongRow = function(songNumber, songName,songLength){
     $row.hover(onHover,offHover);
     return $row;
 };
+
+var setSong=function(songNumber){
+  currentlyPlayingSongNumber=parseInt(songNumber);
+  currentSongFromAlbum=currentAlbum.songs[currentlyPlayingSongNumber-1];
+};
+
+
+var getSongNumberCell=function(number){
+    return $('.song-item-number[data-song-number="' + number + '"]');
+};
+
 
 var updatePlayerBarSong=function(song){
         $(".player-bar .song-name").text(song["title"]);
@@ -102,8 +111,8 @@ var trackIndex= function(album,song){
 };
 
 var nextSong=function(){
-  //change the symbol in the song that is being LEFT to a number again    
-  $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]').html(currentlyPlayingSongNumber);  
+  //change the symbol in the song that is being LEFT to a number again
+  getSongNumberCell(currentlyPlayingSongNumber).html(currentlyPlayingSongNumber); 
 
   //set the song number to the next song. if we're at the end of the list, loop around   
   if (trackIndex(currentAlbum,currentSongFromAlbum)===currentAlbum.songs.length-1 ){
@@ -114,18 +123,19 @@ var nextSong=function(){
       currentlyPlayingSongNumber++;
   }
   //update what the current song is, and then update the player bar with that info
-  currentSongFromAlbum=currentAlbum.songs[currentlyPlayingSongNumber-1];
+  setSong(currentlyPlayingSongNumber);
+  
     
   updatePlayerBarSong(currentSongFromAlbum);
   
-  //update the symbol in the currently playing song with a pause button    
-  $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]').html(pauseButtonTemplate);
+  //update the symbol in the currently playing song with a pause button 
+  getSongNumberCell(currentlyPlayingSongNumber).html(pauseButtonTemplate);
         
 };
 
 var previousSong=function(){
   //change the symbol in the song that is being LEFT to a number again    
-  $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]').html(currentlyPlayingSongNumber);  
+  getSongNumberCell(currentlyPlayingSongNumber).html(currentlyPlayingSongNumber);  
 
   //set the song number to the next song. if we're at the beginning of the list, loop around   
   if (trackIndex(currentAlbum,currentSongFromAlbum)===0 ){
@@ -134,11 +144,11 @@ var previousSong=function(){
       currentlyPlayingSongNumber--;
   }
   //update what the current song is, and then update the player bar with that info
-  currentSongFromAlbum=currentAlbum.songs[currentlyPlayingSongNumber-1];
+  setSong(currentlyPlayingSongNumber);
   updatePlayerBarSong(currentSongFromAlbum);
   
   //update the symbol in the currently playing song with a pause button    
-  $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]').html(pauseButtonTemplate);
+  getSongNumberCell(currentlyPlayingSongNumber).html(pauseButtonTemplate);
         
 };
 
