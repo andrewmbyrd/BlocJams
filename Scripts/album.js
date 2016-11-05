@@ -87,7 +87,7 @@ var setVolume = function(volume){
     if(currentSoundFile){
         currentSoundFile.setVolume(volume);
     }
-}
+};
 
 var getSongNumberCell=function(number){
     return $('.song-item-number[data-song-number="' + number + '"]');
@@ -99,7 +99,23 @@ var updatePlayerBarSong=function(song){
         $(".player-bar .artist-name").text(currentAlbum.artist);
         $(".player-bar .artist-song-mobile").text(song["title"]+" - "+currentAlbum.artist);
         $(".main-controls .play-pause").html(playerBarPauseButton);
-    };
+};
+
+var togglePlayFromPlayerBar=function(){
+    if(currentSoundFile){
+      if(currentSoundFile.isPaused()){
+        $(getSongNumberCell(currentlyPlayingSongNumber)).html(pauseButtonTemplate);
+        $mainPlay.html(playerBarPauseButton);
+        currentSoundFile.play();
+     }else{
+        $(getSongNumberCell(currentlyPlayingSongNumber)).html(playButtonTemplate);
+        $mainPlay.html(playerBarPlayButton);
+        currentSoundFile.pause();
+     }
+     }else{
+         alert("Select a song to play first!");
+     } 
+};
 
 // this sets the page to the album you pass in 
  var setCurrentAlbum = function(album) {
@@ -174,6 +190,8 @@ var previousSong=function(){
         
 };
 
+
+var $mainPlay=$(".main-controls .play-pause");
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
 var pauseButtonTemplate= '<a class="album-song-button"><span class="ion-pause"></span></a>';
 var playerBarPlayButton = '<span class="ion-play"></span>';
@@ -194,5 +212,6 @@ var $nextButton = $('.main-controls .next');
      setCurrentAlbum(albumPicasso);
      $previousButton.click(previousSong);
      $nextButton.click(nextSong);
+     $mainPlay.click(togglePlayFromPlayerBar);
 
  });
