@@ -7,7 +7,7 @@ var createSongRow = function(songNumber, songName,songLength){
         '<tr class="album-view-song-item">'
      + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
       + '  <td class="song-item-title">' + songName + '</td>'
-      + '  <td class="song-item-duration">' + songLength + '</td>'
+      + '  <td class="song-item-duration">' + filterTimeCode(songLength) + '</td>'
       + '</tr>'
       ;
  
@@ -22,7 +22,7 @@ var createSongRow = function(songNumber, songName,songLength){
             updatePlayerBarSong(currentSongFromAlbum);
             currentSoundFile.play();
             updateSeekBarWhileSongPlays();
-            updateSeekPercentage($(".player-bar .volume .seek-bar"),currentVolume/$(".player-bar .volume .seek-bar").width())
+            updateSeekPercentage($(".player-bar .volume .seek-bar"),currentVolume/$(".player-bar .volume .seek-bar").width());
         
         }else if(currentlyPlayingSongNumber===songItemNumber){
             $(this).html(playButtonTemplate);
@@ -97,7 +97,7 @@ var seek = function(time){
     if(currentSoundFile){
         currentSoundFile.setTime(time);
     }
-}
+};
 var getSongNumberCell=function(number){
     return $('.song-item-number[data-song-number="' + number + '"]');
 };
@@ -108,6 +108,7 @@ var updatePlayerBarSong=function(song){
         $(".player-bar .artist-name").text(currentAlbum.artist);
         $(".player-bar .artist-song-mobile").text(song["title"]+" - "+currentAlbum.artist);
         $(".main-controls .play-pause").html(playerBarPauseButton);
+        setTotalTimeInPlayerBar(song["duration"]);
 };
 
 var togglePlayFromPlayerBar=function(){
@@ -151,12 +152,30 @@ var togglePlayFromPlayerBar=function(){
      }
  };
 
+var setCurrentTimeInPlayerBar=function(currentTime){
+        $(".current-time").text(filterTimeCode(currentTime));
+};
+
+var setTotalTimeInPlayerBar=function(totalTime){
+    $(".total-time").text(filterTimeCode(totalTime));
+};
+
+var filterTimeCode=function(timeInSeconds){
+    var t=parseFloat(timeInSeconds);
+    var minutes=Math.floor(t/60);
+    var seconds=Math.floor(t%60);
+    if(seconds<10){
+        return minutes+":0"+seconds;
+    }
+    return minutes+":"+seconds;
+};
+
 var updateSeekBarWhileSongPlays=function(){
     if (currentSoundFile) {
          currentSoundFile.bind('timeupdate.normal', function(event) {
              var seekBarFillRatio = this.getTime() / this.getDuration();
              var $seekBar = $('.seek-control .seek-bar');
- 
+             setCurrentTimeInPlayerBar(this.getTime());
              updateSeekPercentage($seekBar, seekBarFillRatio);
          });
      }
@@ -199,19 +218,20 @@ var setupSeekBars = function(){
          
          var $seekBar = $(this).parent();
  
-         
+         var grandpa=this.parentElement.parentElement.className;
          $(document).bind('mousemove.thumb', function(event){
-             //i noticed some interruption when i slid the bars while the song was //playing, so i unbound the timeupdate function until the mouse is //released again
-             currentSoundFile.unbind("timeupdate.normal");
+             
              var offsetX = event.pageX - $seekBar.offset().left;
              var barWidth = $seekBar.width();
              var seekBarFillRatio = offsetX / barWidth;
- 
-          updateSeekPercentage($seekBar, seekBarFillRatio);    
+             updateSeekPercentage($seekBar, seekBarFillRatio); 
+          
              
-        if(this.parentElement.className==="seek-control"){
+             
+        if(grandpa=="seek-control"){
                 if(currentSoundFile){
                     seek(seekBarFillRatio*currentSoundFile.getDuration());
+                    setCurrentTimeInPlayerBar(seekBarFillRatio*currentSoundFile.getDuration());
                 }
         }else{
             setVolume(seekBarFillRatio*100);
@@ -221,7 +241,6 @@ var setupSeekBars = function(){
  
          
          $(document).bind('mouseup.thumb', function() {
-             updateSeekBarWhileSongPlays();
              $(document).unbind('mousemove.thumb');
              $(document).unbind('mouseup.thumb');
          });
