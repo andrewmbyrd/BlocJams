@@ -82,26 +82,21 @@ window.onload = function() {
      setCurrentAlbum(albumPicasso);
  };
 
+//create a list of all the currently available albums and their artists
+var albums=[albumPicasso,"Pablo Picasso",albumMarconi,"Guglielmo Marconi",albumKong,"David Wise"];
 //Get the album cover for current page
 var albumCover=document.getElementsByClassName("half")[0];
 
 //add an event listener to the album cover div object we just got
 albumCover.addEventListener("click",function(event){
     
-    //check what the current album is, and then change it to the next album
-    if(document.getElementsByClassName("album-view-artist")[0].firstChild.nodeValue=="Pablo Picasso"){
-        setCurrentAlbum(albumMarconi);
-        return;
+    var index=albums.indexOf(document.getElementsByClassName("album-view-artist")[0].innerHTML);
+    if(index<albums.length-1){
+        setCurrentAlbum(albums[index+1]);
     }
-    
-    if(document.getElementsByClassName("album-view-artist")[0].firstChild.nodeValue=="Guglielmo Marconi"){
-        setCurrentAlbum(albumKong);
-        return;
+    else{
+        setCurrentAlbum(albums[0]);
     }
-    
-    if(document.getElementsByClassName("album-view-artist")[0].firstChild.nodeValue=="David Wise"){
-        setCurrentAlbum(albumPicasso);
-        return;
-    }
+ 
     
 });
